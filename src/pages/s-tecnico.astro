@@ -1,0 +1,285 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+---
+
+<Layout>
+<main class="min-h-svh bg-white pt-28 pb-24 text-[#3E2723]">
+    <div class="mx-auto w-[90%] lg:w-[80%]">
+
+        <h2 class="text-4xl md:text-6xl">Servicio técnico</h2>
+        <p class="mt-4 max-w-2xl text-lg">
+            Elige día y hora, y cuéntanos qué necesitas. Te confirmaremos la cita lo antes posible.
+        </p>
+
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-5">
+
+            <!-- 2. Calendario -->
+            <section class="rounded border border-slate-200 p-5 shadow-sm lg:col-span-3" aria-label="Calendario">
+                
+
+                <div class="mb-4 flex items-center justify-between">
+                    <button id="prev-month" type="button" class="rounded px-3 py-2 hover:bg-[#6F4E37]/10 disabled:cursor-not-allowed disabled:text-slate-300 disabled:hover:bg-transparent" aria-label="Mes anterior">←</button>
+                    <h2 id="month-label" class="text-3xl! capitalize" aria-live="polite"></h2>
+                    <button id="next-month" type="button" class="rounded px-3 py-2 hover:bg-[#6F4E37]/10" aria-label="Mes siguiente">→</button>
+                </div>
+
+                <div class="grid grid-cols-7 gap-1 text-center text-xs text-slate-500">
+                    <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                </div>
+                <div id="calendar-grid" class="mt-1 grid grid-cols-7 gap-1"></div>
+
+                <p class="mt-4 text-xs text-slate-500">Los días en gris no tienen horas libres para este técnico.</p>
+            </section>
+
+            <!-- 3. Horas y datos -->
+            <section class="rounded border border-slate-200 p-5 shadow-sm lg:col-span-2" aria-label="Horas disponibles">
+                <p class="mb-1 font-light uppercase">Elige una hora</p>
+                <p id="selected-day" class="mb-4 text-sm capitalize text-slate-500">Selecciona un día en el calendario.</p>
+
+                <div id="slots" class="grid grid-cols-3 gap-2" aria-live="polite"></div>
+
+                <!-- Formulario -->
+                <form id="booking-form" class="mt-6 hidden space-y-3">
+                    <p id="summary" class="rounded bg-[#6F4E37]/10 p-3 text-sm font-semibold"></p>
+
+                    <label class="block text-sm">
+                        Nombre
+                        <input name="name" required autocomplete="name" class="mt-1 w-full rounded border border-slate-300 p-2 focus:outline-2 focus:outline-[#6F4E37]" />
+                    </label>
+                    <label class="block text-sm">
+                        Teléfono
+                        <input name="phone" type="tel" required autocomplete="tel" class="mt-1 w-full rounded border border-slate-300 p-2 focus:outline-2 focus:outline-[#6F4E37]" />
+                    </label>
+                    <label class="block text-sm">
+                        Email
+                        <input name="email" type="email" required autocomplete="email" class="mt-1 w-full rounded border border-slate-300 p-2 focus:outline-2 focus:outline-[#6F4E37]" />
+                    </label>
+                    <label class="block text-sm">
+                        ¿Qué necesitas?
+                        <textarea name="notes" rows="3" required class="mt-1 w-full rounded border border-slate-300 p-2 focus:outline-2 focus:outline-[#6F4E37]"></textarea>
+                    </label>
+
+                    <button type="submit" class="w-full rounded bg-[#6F4E37] py-3 font-semibold text-white transition-colors hover:bg-[#3E2723]">
+                        Solicitar cita
+                    </button>
+                </form>
+
+                <!-- Confirmación -->
+                <div id="confirmation" class="mt-6 hidden rounded border-2 border-[#6F4E37] p-4 text-center">
+                    <p class="text-lg font-semibold">Solicitud enviada</p>
+                    <p id="confirmation-text" class="mt-2 text-sm"></p>
+                    <button id="new-booking" type="button" class="mt-4 text-sm underline">Reservar otra cita</button>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+</Layout>
+
+<script>
+    // ---------- Datos y disponibilidad (SIMULADOS) ----------
+    // Cuando exista el back, solo hay que sustituir getAvailability()
+    // por una llamada fetch a tu API y guardar la reserva en el submit.
+    const SLOT_HOURS = ["09:00", "10:00", "11:00", "12:00", "13:00", "16:00", "17:00", "18:00"];
+    const booked = new Set<string>(); // reservas hechas en esta sesión
+
+    function hash(str: string): number {
+        let h = 0;
+        for (const c of str) h = (h * 31 + c.charCodeAt(0)) | 0;
+        return Math.abs(h);
+    }
+
+    function toISO(d: Date): string {
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${d.getFullYear()}-${m}-${day}`;
+    }
+
+    function startOfDay(d: Date): Date {
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    }
+
+    function getAvailability(techId: string, date: Date): string[] {
+        const now = new Date();
+        if (startOfDay(date) < startOfDay(now)) return [];
+        const dow = date.getDay();
+        if (dow === 0 || dow === 6) return [];
+
+        const iso = toISO(date);
+        const isToday = iso === toISO(now);
+
+        return SLOT_HOURS.filter((slot) => {
+            if (hash(techId + iso + slot) % 3 === 0) return false; // "ocupado" simulado
+            if (booked.has(`${techId}|${iso}|${slot}`)) return false;
+            if (isToday && parseInt(slot) <= now.getHours()) return false;
+            return true;
+        });
+    }
+
+    // ---------- Estado ----------
+    const today = new Date();
+    const state = {
+        techId: "t1",
+        techName: "Técnico 1",
+        month: new Date(today.getFullYear(), today.getMonth(), 1),
+        date: null as Date | null,
+        slot: null as string | null
+    };
+
+    // ---------- Elementos ----------
+    const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+    const grid = $("calendar-grid");
+    const monthLabel = $("month-label");
+    const prevBtn = $<HTMLButtonElement>("prev-month");
+    const nextBtn = $("next-month");
+    const slotsEl = $("slots");
+    const selectedDay = $("selected-day");
+    const form = $<HTMLFormElement>("booking-form");
+    const summary = $("summary");
+    const confirmation = $("confirmation");
+    const confirmationText = $("confirmation-text");
+
+    const fmtMonth = new Intl.DateTimeFormat("es-ES", { month: "long", year: "numeric" });
+    const fmtDay = new Intl.DateTimeFormat("es-ES", { weekday: "long", day: "numeric", month: "long" });
+
+    // ---------- Render ----------
+    function renderCalendar() {
+        monthLabel.textContent = fmtMonth.format(state.month);
+        prevBtn.disabled =
+            state.month.getFullYear() === today.getFullYear() && state.month.getMonth() <= today.getMonth();
+
+        const year = state.month.getFullYear();
+        const month = state.month.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const offset = (new Date(year, month, 1).getDay() + 6) % 7; // semana empieza en lunes
+
+        grid.innerHTML = "";
+        for (let i = 0; i < offset; i++) grid.appendChild(document.createElement("span"));
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day);
+            const free = getAvailability(state.techId, date).length;
+            const isSelected = state.date !== null && toISO(state.date) === toISO(date);
+            const isToday = toISO(date) === toISO(today);
+
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.disabled = free === 0;
+            btn.setAttribute("aria-pressed", String(isSelected));
+            btn.className =
+                "flex aspect-square flex-col items-center justify-center rounded text-sm transition-colors " +
+                (free === 0
+                    ? "cursor-not-allowed text-slate-300 "
+                    : isSelected
+                    ? "bg-[#6F4E37] text-white "
+                    : "hover:bg-[#6F4E37]/10 ") +
+                (isToday ? "ring-1 ring-[#6F4E37] " : "");
+            btn.innerHTML =
+                `<span class="font-semibold">${day}</span>` +
+                (free > 0 ? `<span class="text-[10px] leading-none">${free} libres</span>` : "");
+
+            btn.addEventListener("click", () => {
+                state.date = date;
+                state.slot = null;
+                renderCalendar();
+                renderSlots();
+            });
+            grid.appendChild(btn);
+        }
+    }
+
+    function renderSlots() {
+        slotsEl.innerHTML = "";
+        form.classList.add("hidden");
+        confirmation.classList.add("hidden");
+
+        if (!state.date) {
+            selectedDay.textContent = "Selecciona un día en el calendario.";
+            return;
+        }
+        selectedDay.textContent = fmtDay.format(state.date);
+
+        const slots = getAvailability(state.techId, state.date);
+        slots.forEach((slot) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.textContent = slot;
+            btn.setAttribute("aria-pressed", String(state.slot === slot));
+            btn.className =
+                "rounded border border-[#6F4E37] px-3 py-2 text-sm transition-colors " +
+                (state.slot === slot ? "bg-[#6F4E37] text-white" : "hover:bg-[#6F4E37] hover:text-white");
+            btn.addEventListener("click", () => {
+                state.slot = slot;
+                renderSlots();
+                showForm();
+            });
+            slotsEl.appendChild(btn);
+        });
+
+        if (state.slot) showForm();
+    }
+
+    function showForm() {
+        if (!state.date || !state.slot) return;
+        summary.textContent = `${state.techName} · ${fmtDay.format(state.date)} · ${state.slot}`;
+        form.classList.remove("hidden");
+    }
+
+    // ---------- Eventos ----------
+    document.querySelectorAll<HTMLButtonElement>(".tech-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            state.techId = btn.dataset.tech!;
+            state.techName = btn.dataset.name!;
+            state.slot = null;
+            document.querySelectorAll(".tech-btn").forEach((b) => {
+                const active = b === btn;
+                b.setAttribute("aria-pressed", String(active));
+                b.classList.toggle("bg-[#6F4E37]/10", active);
+            });
+            renderCalendar();
+            renderSlots();
+        });
+    });
+    document.querySelector(".tech-btn")?.classList.add("bg-[#6F4E37]/10");
+
+    prevBtn.addEventListener("click", () => {
+        state.month = new Date(state.month.getFullYear(), state.month.getMonth() - 1, 1);
+        renderCalendar();
+    });
+    nextBtn.addEventListener("click", () => {
+        state.month = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 1);
+        renderCalendar();
+    });
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!state.date || !state.slot) return;
+
+        const data = Object.fromEntries(new FormData(form));
+        const request = { technician: state.techId, date: toISO(state.date), slot: state.slot, ...data };
+        console.log("Solicitud de cita (pendiente de back):", request);
+
+        booked.add(`${state.techId}|${toISO(state.date)}|${state.slot}`);
+        confirmationText.textContent = `${summary.textContent}. Te contactaremos en ${data.email}.`;
+
+        form.reset();
+        form.classList.add("hidden");
+        slotsEl.innerHTML = "";
+        selectedDay.textContent = "";
+        confirmation.classList.remove("hidden");
+        state.slot = null;
+        state.date = null;
+        renderCalendar();
+    });
+
+    $("new-booking").addEventListener("click", () => {
+        confirmation.classList.add("hidden");
+        selectedDay.textContent = "Selecciona un día en el calendario.";
+    });
+
+    // ---------- Inicio ----------
+    renderCalendar();
+    renderSlots();
+</script>

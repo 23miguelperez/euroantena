@@ -1,0 +1,29 @@
+---
+const nosotros = [
+    {
+        description: [
+            "Euroantena s.l. nace en el año 1980 con el objetivo de distribuir material de telecomunicación dando apoyo técnico al instalador, siendo referencia en el sector por la continua innovación y exploración de nuevos campos, fruto de ello fue la creación, en al año 1995, de un departamento de ingeniería especializado en la redacción de proyectos de telecomunicaciones en todos sus ámbitos.",
+            "Dando un paso más en el servcio desde 1998 somos distribuidores para la zona centro de los productos de Domótica e Inmótica del fabricante español ISDE, referente en nuestro pais de la tecnología LonWorks."
+        ] 
+            ,
+        img: "/images/nosotros.png", alt: "Imagen de Euroantena"
+    }
+]    
+---
+
+<section id="proyectos" class="proyectos-section py-20">
+    <div class="w-[90%] mx-auto lg:w-[80%]">
+        <h2 class="mb-20 text-white!">Sobre <span class="font-normal">Nosotros</span></h2>
+
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {nosotros.map((item) => (
+                <div class="flex flex-col items-center gap-4 md:flex-row">
+                    <img src={item.img} alt={item.alt} class="w-full max-w-sm rounded shadow-md" />
+                    <div>
+                        <p>{item.description}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+</section>

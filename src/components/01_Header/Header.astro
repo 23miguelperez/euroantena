@@ -1,0 +1,89 @@
+---
+
+---
+
+<header id="main-header" class="header fixed left-[0.5%] right-[0.5%] z-50 top-2 flex items-center justify-between p-3 shadow bg-(--tertiary-color)/90 transition-transform duration-300
+rounded-lg">
+    
+    <div class="header-container flex items-center justify-between w-[95%] mx-auto relative">
+        <p class="header-logo font-bold text-4xl text-white">Logo</p>
+
+        <!-- Botón Hamburguesa: visible SOLO en móviles (hidden md:flex) -->
+        <button id="menu-btn" class="flex md:hidden flex-col justify-between w-6 h-5 z-50 cursor-pointer" aria-label="Abrir menú">
+            <span class="w-full h-0.5 bg-white transition-all duration-300 origin-left line-1"></span>
+            <span class="w-full h-0.5 bg-white transition-all duration-300 line-2"></span>
+            <span class="w-full h-0.5 bg-white transition-all duration-300 origin-left line-3"></span>
+        </button>
+
+        <!-- Navegación: Cambia drásticamente entre móvil y pantalla grande -->
+        <nav id="menu-nav" class="header-nav fixed md:static top-19 w-full h-screen py-20 px-8 md:py-1 md:h-auto md:w-auto bg-(--tertiary-color)/90 md:bg-transparent rounded-lg
+        flex flex-col md:flex-row md:items-center md:justify-center translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <ul class="uppercase nav-list flex flex-col md:flex-row gap-6 md:gap-8 text-2xl md:text-sm items-end mx-3 ">
+                <li class="text-amber-100 nav-item opacity-80 hover:opacity-100 transition-opacity duration-300 hover:border-b-2 border-amber-100"><a href="#inicio" class="nav-link">Inicio</a></li>
+                <li class="nav-item opacity-80 hover:opacity-100 transition-opacity duration-300 hover:border-b-2 border-amber-100"><a href="#experiencia" class="nav-link">Servicios</a></li>
+                <li class="nav-item opacity-80 hover:opacity-100 transition-opacity duration-300 hover:border-b-2 border-amber-100"><a href="#proyectos" class="nav-link">Nosotros</a></li>
+                <li class="nav-item opacity-80 hover:opacity-100 transition-opacity duration-300 hover:border-b-2 border-amber-100"><a href="#contacto" class="nav-link">Contacto</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const header = document.getElementById('main-header');
+        const menuBtn = document.getElementById('menu-btn');
+        const menuNav = document.getElementById('menu-nav');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function toggleMenu() {
+            if (!menuNav || !menuBtn) return;
+            
+            menuNav.classList.toggle('translate-x-full');
+            
+            menuBtn.querySelector('.line-1')?.classList.toggle('rotate-45');
+            menuBtn.querySelector('.line-2')?.classList.toggle('opacity-0');
+            menuBtn.querySelector('.line-3')?.classList.toggle('-rotate-45');
+        }
+
+        if (menuBtn && menuNav) {
+            menuBtn.addEventListener('click', toggleMenu);
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (!menuNav.classList.contains('translate-x-full')) {
+                        toggleMenu();
+                    }
+                });
+            });
+        }
+
+        // Lógica del Scroll (Opacidad del fondo + ocultar/mostrar)
+        if (header) {
+            let lastScrollY = window.scrollY;
+
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+
+                if (currentScrollY > 50) {
+                    header.classList.replace('bg-[var(--primary-color)]/90', 'bg-[var(--primary-color)]/60');
+                } else {
+                    header.classList.replace('bg-[var(--primary-color)]/60', 'bg-[var(--primary-color)]/90');
+                }
+
+                const menuAbierto = menuNav && !menuNav.classList.contains('translate-x-full');
+
+                if (!menuAbierto) {
+                    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                        header.classList.add('-translate-y-full');
+                    } else {
+                        header.classList.remove('-translate-y-full');
+                    }
+                }
+
+                lastScrollY = currentScrollY;
+            });
+        }
+    });
+</script>
+
+

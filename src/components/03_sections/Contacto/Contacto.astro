@@ -1,0 +1,24 @@
+---
+import Formulario from '../Contacto/Formulario.astro'
+---
+
+<section id="contacto" class="relative isolate pt-24 pb-10">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 bottom-0 -top-64 -z-10
+        bg-(--tertiary-color)/70
+        mask-[linear-gradient(to_bottom,transparent,rgba(0,0,0,0.08)_5rem,rgba(0,0,0,0.25)_10rem,rgba(0,0,0,0.5)_15rem,rgba(0,0,0,0.78)_20rem,black_26rem)]
+        [-webkit-mask-image:linear-gradient(to_bottom,transparent,rgba(0,0,0,0.08)_5rem,rgba(0,0,0,0.25)_10rem,rgba(0,0,0,0.5)_15rem,rgba(0,0,0,0.78)_20rem,black_26rem)]"
+  ></div>
+    <h2 class="w-[90%] lg:w-[80%] mx-auto text-white!">contacto</h2>
+    <div class="flex flex-col lg:flex-row w-[90%] lg:w-[80%] mx-auto">
+
+        <section class="lg:w-1/2">
+            <Formulario/>
+        </section>
+
+        <article class="lg:w-1/2">
+
+        </article>
+    </div>
+</section>

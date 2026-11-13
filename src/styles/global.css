@@ -1,0 +1,39 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+
+:root{
+    --primary-color: rgba(111,78,55,0.95);
+    --secondary-color: rgba(111,78,55,0.8);
+    --tertiary-color: oklch(21.4% 0.009 43.1);
+    --font-worksans: "Work Sans", sans-serif;
+    /*--text-color: #ffffff;*/ /* NO HACE FALTA*/
+    color-scheme: dark; /*MODO OSCURO - TEXTO BLANCO POR DEFECTO*/
+}
+
+html{
+    font-family: 'Onest Variable', sans-serif;
+    scroll-behavior: smooth;
+}
+
+h1{
+    font-family: "Work Sans", sans-serif !important;
+    font-weight: 300 !important;
+    letter-spacing: -0.07em;
+}
+
+h2{
+    font-family: "Work Sans", sans-serif !important;
+    font-weight: 300 !important;
+    color:var(--primary-color);
+    font-size: 4rem;  
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+}
+
+@layer utilities {
+    .font-worksans {
+        font-family: var(--font-worksans);
+    }
+}
