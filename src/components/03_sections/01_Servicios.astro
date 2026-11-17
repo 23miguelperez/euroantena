@@ -3,42 +3,42 @@ const services = [
     {
         title: "Domótica",
         description: "Ofrecemos servicios de instalación...",
-        icon: "/icons/antenna.svg",
+        icon: "/icons/automatic-gearbox.svg",
         img: "/images/01_Domotica.png",
         href: "#"
     },
     {
         title: "Inmótica",
         description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/maintenance.svg",
+        icon: "/icons/wifi.svg",
         img: "/images/02_Inmotica.png",
         href: "#"
     },
     {
         title: "Seguridad",
         description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/advice.svg",
+        icon: "/icons/home-lock.svg",
         img: "/images/03_Seguridad.png",
         href: "#"
     },
     {
         title: "Cableado estructurado",
         description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/telecom.svg",
+        icon: "/icons/load-balancer.svg",
         img: "/images/04_Cableado.png",
         href: "#"
     },
     {
         title: "Ingeniería de telecomunicaciones",
         description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/network.svg",
+        icon: "/icons/building-broadcast-tower.svg",
         img: "/images/05_Ingeniería.png",
         href: "#"
     },
     {
         title: "Videovigilancia",
         description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/project.svg",
+        icon: "/icons/device-cctv.svg",
         img: "/images/06_Videovigilancia.png",
         href: "#"
     }
@@ -82,7 +82,7 @@ const technicalService = {
                         style={`background-image: url('${service.img}')`}
                     ></div>
 
-                    <!-- Degradado oscuro/marrón más rico para leer bien el texto -->
+                    <!-- Degradado oscuro/marrón para leer bien el texto -->
                     <div class="absolute inset-0 bg-linear-to-t from-[#3b281b]/95 via-[#6F4E37]/80 to-[#6F4E37]/50 transition-opacity duration-500 group-hover:opacity-85"></div>
 
                     <!-- Fila superior: Icono en caja cristal + Número de servicio -->
@@ -98,7 +98,7 @@ const technicalService = {
                     <!-- Fila inferior: Título, descripción breve y línea animada -->
                     <div class="relative mt-8">
                         <div class="flex items-end justify-between gap-4">
-                            <h3 class="text-xl font-bold leading-snug text-white">
+                            <h3 class="text-xl font-medium leading-snug text-white">
                                 {service.title}
                             </h3>
                             <span class="shrink-0 text-2xl text-amber-200 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100" aria-hidden="true">

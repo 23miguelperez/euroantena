@@ -57,14 +57,14 @@ const contactDetails = [
             <article class="flex flex-col justify-between gap-6 lg:col-span-5">
                 
                 <!-- Intro breve -->
-                <div class="border-l-2 border-amber-200/70 pl-5">
-                    <h3 class="text-xl font-bold text-white">
+                <!--<div class="border-l-2 border-amber-200/70 pl-5">
+                    <h3 class="text-xl font-medium text-white">
                         Asesoramiento técnico a medida
                     </h3>
                     <p class="mt-2 text-sm leading-relaxed text-amber-50/80">
                         Tanto si necesitas redactar un proyecto ICT, modernizar las telecomunicaciones de tu edificio o instalar sistemas de seguridad y domótica, nuestro equipo de ingeniería te acompaña en cada fase.
                     </p>
-                </div>
+                </div>-->
 
                 <!-- Tarjetas de datos de contacto -->
                 <div class="space-y-4">
@@ -77,12 +77,12 @@ const contactDetails = [
                             {item.href ? (
                                 <a
                                     href={item.href}
-                                    class="mt-1 inline-block text-lg font-bold text-white transition-colors group-hover:text-amber-100"
+                                    class="mt-1 inline-block text-lg font-mono text-white transition-colors group-hover:text-amber-100"
                                 >
                                     {item.value}
                                 </a>
                             ) : (
-                                <p class="mt-1 text-lg font-bold text-white">
+                                <p class="mt-1 text-lg font-mono text-white">
                                     {item.value}
                                 </p>
                             )}
@@ -101,7 +101,7 @@ const contactDetails = [
                             <span class="text-xs font-bold uppercase tracking-wider text-amber-200">
                                 ¿Ya eres cliente?
                             </span>
-                            <p class="mt-0.5 text-sm font-medium text-white">
+                            <p class="mt-0.5 text-sm font-mono text-white">
                                 Reserva cita directa con nuestro servicio técnico.
                             </p>
                         </div>
