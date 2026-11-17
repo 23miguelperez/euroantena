@@ -4,68 +4,82 @@ const CAMPOS = [
         id: "name",
         label: "Nombre y Apellidos",
         type: "text",
-        placeholder: "Lucía Fernández Ortega"
+        placeholder: "Lucía Fernández Ortega",
+        required: true,
+        half: true
     },
     {
         id: "company",
-        label: "Empresa",
+        label: "Empresa (opcional)",
         type: "text",
-        placeholder: "Soluciones Atlántica S.L."
+        placeholder: "Soluciones Atlántica S.L.",
+        required: false,
+        half: true
     },
     {
         id: "email",
-        label: "Email address",
+        label: "Correo electrónico",
         type: "email",
-        placeholder: "lucia.fernandez@ejemplo.com"
+        placeholder: "lucia.fernandez@ejemplo.com",
+        required: true,
+        half: false
     },
     {
         id: "message",
         label: "Mensaje",
         type: "textarea",
-        placeholder: "Cuéntame en qué puedo ayudarte..."
+        placeholder: "Cuéntanos en qué proyecto o instalación podemos ayudarte...",
+        required: true,
+        half: false
     }
-] as const
+] as const;
 ---
 
 <form class="w-full">
-    <div class="info-item w-full mx-auto my-4 px-4 border border-white/10 rounded-xl p-4">
+    <div class="rounded-2xl border border-white/15 bg-white/5 p-6 sm:p-8 shadow-xl backdrop-blur-sm">
+        
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {CAMPOS.map((campo) => (
+                <div class={campo.half ? "sm:col-span-1" : "sm:col-span-2"}>
+                    <label
+                        for={campo.id}
+                        class="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-100/90"
+                    >
+                        {campo.label}
+                    </label>
 
-        {CAMPOS.map((campo) => (
-            <div class="my-2">
-                <label for={campo.id} class="block text-lg mb-1">
-                    {campo.label}
-                </label>
-                {campo.type === "textarea" ? (
-                    <textarea
-                        id={campo.id}
-                        name={campo.id}
-                        class="bg-transparent border border-white/10 text-white text-sm rounded-lg focus:ring-1 focus:ring-yellow-200 focus:border-yellow-200 block w-full px-3 py-2.5 placeholder:text-white/40 outline-none transition duration-300 resize-none"
-                        placeholder={campo.placeholder}
-                        rows="4"
-                        required
-                    ></textarea>
-                ) : (
-                    <input
-                        type={campo.type}
-                        id={campo.id}
-                        name={campo.id}
-                        class="bg-transparent border border-white/10 text-white text-sm rounded-lg focus:ring-1 focus:ring-yellow-200 focus:border-yellow-200 block w-full px-3 py-2.5 placeholder:text-white/40 outline-none transition duration-300"
-                        placeholder={campo.placeholder}
-                        required
-                    />
-                )}
-            </div>
-        ))}
+                    {campo.type === "textarea" ? (
+                        <textarea
+                            id={campo.id}
+                            name={campo.id}
+                            rows="4"
+                            required={campo.required}
+                            placeholder={campo.placeholder}
+                            class="w-full resize-none rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 transition-all duration-300 focus:border-amber-200 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-200/25"
+                        ></textarea>
+                    ) : (
+                        <input
+                            type={campo.type}
+                            id={campo.id}
+                            name={campo.id}
+                            required={campo.required}
+                            placeholder={campo.placeholder}
+                            class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 transition-all duration-300 focus:border-amber-200 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-200/25"
+                        />
+                    )}
+                </div>
+            ))}
+        </div>
 
-        <div class="flex justify-end mt-2">
+        <div class="mt-6 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center">
             <button
                 type="submit"
-                class="hover:bg-yellow-200/10 text-md transition duration-300 
-                border border-yellow-200/40 hover:border-yellow-300 rounded-3xl px-4 py-2"
-                style="font-family: 'JetBrains Mono', monospace;"
+                class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-200 px-6 py-3 text-sm font-bold text-[#3b281b] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-100 sm:w-auto cursor-pointer"
             >
-                Enviar
+                <span>Enviar mensaje</span>
+                <span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">→</span>
             </button>
         </div>
+
     </div>
 </form>
