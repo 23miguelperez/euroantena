@@ -1,29 +1,76 @@
 ---
 const nosotros = [
     {
-        description: [
-            "Euroantena s.l. nace en el año 1980 con el objetivo de distribuir material de telecomunicación dando apoyo técnico al instalador, siendo referencia en el sector por la continua innovación y exploración de nuevos campos, fruto de ello fue la creación, en al año 1995, de un departamento de ingeniería especializado en la redacción de proyectos de telecomunicaciones en todos sus ámbitos.",
-            "Dando un paso más en el servcio desde 1998 somos distribuidores para la zona centro de los productos de Domótica e Inmótica del fabricante español ISDE, referente en nuestro pais de la tecnología LonWorks."
-        ] 
-            ,
-        img: "/images/nosotros.png", alt: "Imagen de Euroantena"
-    }
-]    
+        year: "1980",
+        title: "Nuestros orígenes",
+        description: "Euroantena S.L. nace en 1980 para distribuir productos de telecomunicaciones y dar apoyo técnico al instalador. Desde entonces somos referencia en el sector por nuestra innovación continua y la exploración de nuevos servicios."
+    },
+    {
+        year: "1995",
+        title: "Departamento de ingeniería",
+        description: "Fruto de esa inquietud, en 1995 creamos el departamento de ingeniería, especializado en la redacción de proyectos de telecomunicaciones en todos sus ámbitos, videovigilancia e intrusión."
+    },
+    {
+        year: "1998",
+        title: "Domótica e inmótica",
+        description: "Durante la década de 2000, Euroantena S.L. consolida su posición en el mercado y expande sus servicios a nivel nacional, ofreciendo soluciones integrales a clientes residenciales, comerciales e industriales."
+    },
+];
 ---
 
-<section id="proyectos" class="proyectos-section py-20">
+<section id="proyectos" class="proyectos-section py-24 text-white">
     <div class="w-[90%] mx-auto lg:w-[80%]">
-        <h2 class="mb-20 text-white!">Sobre <span class="font-normal">Nosotros</span></h2>
+        
+        <!-- Encabezado con etiqueta superior -->
+        <div class="mb-16">
+            <span class="text-xs font-semibold tracking-widest uppercase text-amber-200/80">
+                Nuestra trayectoria
+            </span>
+            <h2 class="mt-2 text-3xl font-bold md:text-4xl">
+                Sobre <span class="font-light text-amber-100">Nosotros</span>
+            </h2>
+        </div>
 
-        <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {nosotros.map((item) => (
-                <div class="flex flex-col items-center gap-4 md:flex-row">
-                    <img src={item.img} alt={item.alt} class="w-full max-w-sm rounded shadow-md" />
-                    <div>
-                        <p>{item.description}</p>
-                    </div>
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 items-start">
+            
+            <!-- Columna Izquierda: Imagen con efecto marco y sticky -->
+            <div class="lg:col-span-5 lg:sticky lg:top-24">
+                <div class="relative mx-auto max-w-md">
+                    <!-- Marco decorativo trasero -->
+                    <div class="absolute -inset-3 rounded-2xl border border-amber-100/20 bg-amber-100/5 -rotate-2"></div>
+                    <img 
+                        src="#" 
+                        alt="Euroantena" 
+                        class="relative w-full rounded-xl object-cover shadow-2xl aspect-4/5" 
+                    />
                 </div>
-            ))}
+            </div>
+
+            <!-- Columna Derecha: Línea de tiempo vertical -->
+            <div class="lg:col-span-7">
+                <div class="relative border-l-2 border-amber-100/20 pl-8 ml-4 space-y-10">
+                    {nosotros.map((item) => (
+                        <div class="relative group">
+                            <!-- Punto indicador en la línea -->
+                            <span class="absolute -left-10.25 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-200 ring-4 ring-neutral-900 transition-transform duration-300 group-hover:scale-125"></span>
+                            
+                            <!-- Tarjeta con efecto cristal sutil -->
+                            <div class="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-colors duration-300 hover:border-amber-100/40 hover:bg-white/10">
+                                <span class="inline-block rounded-md bg-amber-100/10 px-3 py-1 text-sm font-bold text-amber-200 mb-3">
+                                    {item.year}
+                                </span>
+                                <h3 class="text-xl font-bold text-white mb-2">
+                                    {item.title}
+                                </h3>
+                                <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                                    {item.description}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
         </div>
     </div>
 </section>

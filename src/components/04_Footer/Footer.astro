@@ -1,0 +1,148 @@
+---
+const currentYear = new Date().getFullYear();
+
+const footerServices = [
+    { label: "Domótica", href: "#" },
+    { label: "Inmótica", href: "#" },
+    { label: "Seguridad", href: "#" },
+    { label: "Cableado estructurado", href: "#" },
+    { label: "Ingeniería de telecomunicaciones", href: "#" },
+    { label: "Videovigilancia", href: "#" },
+];
+
+const footerLinks = [
+    { label: "Inicio", href: "#inicio" },
+    { label: "Servicios", href: "#servicios" },
+    { label: "Sobre nosotros", href: "#proyectos" },
+    { label: "Servicio técnico", href: "/s-tecnico" },
+];
+---
+
+<footer id="contacto" class="relative bg-[#1f1310] text-white border-t border-amber-200/15">
+    
+    <!-- Banner superior de contacto rápido -->
+    <div class="border-b border-white/10 bg-[#2b1b18]/60">
+        <div class="w-[90%] mx-auto lg:w-[80%] py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div>
+                <span class="text-xs font-semibold tracking-widest uppercase text-amber-200">
+                    ¿Tienes un proyecto en mente?
+                </span>
+                <h2 class="mt-1 text-2xl sm:text-3xl font-bold text-white">
+                    Hablemos de tus <span class="font-light text-amber-100">instalaciones</span>
+                </h2>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4">
+                <a
+                    href="/s-tecnico"
+                    class="inline-flex items-center gap-2 rounded-xl bg-amber-200 px-6 py-3 text-sm font-bold text-[#3b281b] shadow-md transition-all duration-300 hover:bg-amber-100 hover:-translate-y-0.5"
+                >
+                    <span>Solicitar asistencia técnica</span>
+                    <span aria-hidden="true">→</span>
+                </a>
+                <a
+                    href="tel:+34000000000"
+                    class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-amber-100 backdrop-blur-sm transition-colors duration-300 hover:border-amber-200/50 hover:bg-white/10"
+                >
+                    <span>Llamar ahora</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal del Footer -->
+    <div class="w-[90%] mx-auto lg:w-[80%] py-16">
+        <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12">
+            
+            <!-- Columna 1: Marca e historia breve (5 columnas) -->
+            <div class="lg:col-span-5 space-y-5">
+                <a href="#inicio" class="inline-flex items-center gap-2 text-3xl tracking-tight text-white">
+                    <span class="h-2.5 w-2.5 rounded-full bg-amber-200"></span>
+                    <span>
+                        <span class="font-light text-amber-100">euro</span><span class="font-bold">antena</span>
+                    </span>
+                </a>
+
+                <p class="text-sm leading-relaxed text-amber-50/75 max-w-md">
+                    Desde 1980 desarrollando proyectos, instalación y puesta en marcha de infraestructuras de telecomunicaciones, redes de datos, seguridad, domótica e inmótica con servicio técnico propio.
+                </p>
+
+                <div class="inline-flex items-center gap-2 rounded-lg border border-amber-200/20 bg-amber-100/5 px-3 py-1.5 text-xs text-amber-200/90">
+                    <span>Ingeniería · Instalación · Postventa</span>
+                </div>
+            </div>
+
+            <!-- Columna 2: Servicios (4 columnas) -->
+            <div class="lg:col-span-4">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-amber-200">
+                    Especialidades
+                </h3>
+                <ul class="mt-5 space-y-3 text-sm text-amber-50/80">
+                    {footerServices.map((service) => (
+                        <li>
+                            <a href={service.href} class="inline-flex items-center gap-2 transition-colors duration-200 hover:text-amber-200">
+                                <span class="h-1 w-1 rounded-full bg-amber-200/60"></span>
+                                {service.label}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <!-- Columna 3: Navegación y Datos de contacto (3 columnas) -->
+            <div class="lg:col-span-3 space-y-8">
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-amber-200">
+                        Navegación
+                    </h3>
+                    <ul class="mt-5 space-y-3 text-sm text-amber-50/80">
+                        {footerLinks.map((link) => (
+                            <li>
+                                <a href={link.href} class="transition-colors duration-200 hover:text-amber-200">
+                                    {link.label}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-amber-200">
+                        Contacto
+                    </h3>
+                    <ul class="mt-4 space-y-2 text-sm text-amber-50/80">
+                        <li>
+                            <a href="mailto:info@euroantena.es" class="hover:text-amber-200 transition-colors">
+                                info@euroantena.es
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+34000000000" class="hover:text-amber-200 transition-colors">
+                                +34 900 000 000
+                            </a>
+                        </li>
+                        <li class="text-amber-50/60 text-xs pt-1">
+                            Dirección de oficina / delegación
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Barra inferior legal -->
+    <div class="border-t border-white/10 bg-[#170e0c]">
+        <div class="w-[90%] mx-auto lg:w-[80%] py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-amber-50/60">
+            <p>
+                © {currentYear} <strong class="font-semibold text-amber-100/90">Euroantena S.L.</strong> Todos los derechos reservados.
+            </p>
+            <div class="flex flex-wrap items-center gap-6">
+                <a href="/aviso-legal" class="hover:text-amber-200 transition-colors">Aviso legal</a>
+                <a href="/privacidad" class="hover:text-amber-200 transition-colors">Política de privacidad</a>
+                <a href="/cookies" class="hover:text-amber-200 transition-colors">Cookies</a>
+            </div>
+        </div>
+    </div>
+
+</footer>

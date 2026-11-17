@@ -1,30 +1,72 @@
 ---
-
+const navItems = [
+    { label: "Inicio", href: "#inicio" },
+    { label: "Servicios", href: "#servicios" },
+    { label: "Nosotros", href: "#proyectos" },
+    { label: "Contacto", href: "#contacto" },
+];
 ---
 
-<header id="main-header" class="header fixed left-[0.5%] right-[0.5%] z-50 top-2 flex items-center justify-between p-3 shadow bg-(--tertiary-color)/90 transition-transform duration-300
-rounded-lg">
-    
-    <div class="header-container flex items-center justify-between w-[95%] mx-auto relative">
-        <p class="header-logo font-bold text-4xl text-white">Logo</p>
+<header
+    id="main-header"
+    class="fixed inset-x-0 top-3 z-50 mx-auto w-[94%] lg:w-[84%] rounded-2xl border border-white/15 bg-(--tertiary-color)/85 px-5 py-3 shadow-xl backdrop-blur-md transition-all duration-300"
+>
+    <div class="flex items-center justify-between">
+        
+        <!-- Logo tipográfico a juego con el Main -->
+        <a href="#inicio" class="group flex items-center gap-2 text-2xl tracking-tight text-white focus:outline-none">
+            <span class="h-2.5 w-2.5 rounded-full bg-amber-200 transition-transform duration-300 group-hover:scale-125"></span>
+            <span>
+                <span class="font-light text-amber-100">euro</span><span class="font-bold">antena</span>
+            </span>
+        </a>
 
-        <!-- Botón Hamburguesa: visible SOLO en móviles (hidden md:flex) -->
-        <button id="menu-btn" class="flex md:hidden flex-col justify-between w-6 h-5 z-50 cursor-pointer" aria-label="Abrir menú">
-            <span class="w-full h-0.5 bg-white transition-all duration-300 origin-left line-1"></span>
-            <span class="w-full h-0.5 bg-white transition-all duration-300 line-2"></span>
-            <span class="w-full h-0.5 bg-white transition-all duration-300 origin-left line-3"></span>
+        <!-- Botón Hamburguesa (Solo móvil) -->
+        <button
+            id="menu-btn"
+            class="relative z-50 flex h-5 w-6 flex-col justify-between md:hidden cursor-pointer"
+            aria-label="Abrir menú"
+            aria-expanded="false"
+        >
+            <span class="line-1 h-0.5 w-full origin-left bg-amber-100 transition-all duration-300"></span>
+            <span class="line-2 h-0.5 w-full bg-amber-100 transition-all duration-300"></span>
+            <span class="line-3 h-0.5 w-full origin-left bg-amber-100 transition-all duration-300"></span>
         </button>
 
-        <!-- Navegación: Cambia drásticamente entre móvil y pantalla grande -->
-        <nav id="menu-nav" class="header-nav fixed md:static top-19 w-full h-screen py-20 px-8 md:py-1 md:h-auto md:w-auto bg-(--tertiary-color)/90 md:bg-transparent rounded-lg
-        flex flex-col md:flex-row md:items-center md:justify-center translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
-            <ul class="uppercase nav-list flex flex-col md:flex-row gap-6 md:gap-8 text-2xl md:text-sm items-end mx-3 ">
-                <li class="text-amber-100 nav-item opacity-80 hover:opacity-100 transition-opacity duration-300 hover:border-b-2 border-amber-100"><a href="#inicio" class="nav-link">Inicio</a></li>
-                <li class="nav-item opacity-80 hover:opacity-100 transition-opacity duration-300 hover:border-b-2 border-amber-100"><a href="#experiencia" class="nav-link">Servicios</a></li>
-                <li class="nav-item opacity-80 hover:opacity-100 transition-opacity duration-300 hover:border-b-2 border-amber-100"><a href="#proyectos" class="nav-link">Nosotros</a></li>
-                <li class="nav-item opacity-80 hover:opacity-100 transition-opacity duration-300 hover:border-b-2 border-amber-100"><a href="#contacto" class="nav-link">Contacto</a></li>
+        <!-- Navegación Desktop y Móvil -->
+        <nav
+            id="menu-nav"
+            class="fixed inset-x-0 top-20 mx-auto w-[94%] rounded-2xl border border-white/15 bg-[#2b1b18]/95 p-8 shadow-2xl backdrop-blur-xl
+                   translate-x-[115%] transition-transform duration-300 ease-in-out
+                   md:static md:mx-0 md:flex md:w-auto md:translate-x-0 md:items-center md:gap-8 md:border-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none"
+        >
+            <ul class="flex flex-col items-start gap-6 md:flex-row md:items-center md:gap-8">
+                {navItems.map((item) => (
+                    <li>
+                        <a
+                            href={item.href}
+                            class="nav-link group relative py-1 text-lg font-medium tracking-wider uppercase text-amber-50/85 transition-colors duration-300 hover:text-amber-200 md:text-xs"
+                        >
+                            {item.label}
+                            <!-- Línea animada inferior -->
+                            <span class="absolute bottom-0 left-0 h-0.5 w-0 bg-amber-200 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+                    </li>
+                ))}
             </ul>
+
+            <!-- Botón CTA destacado en el Header -->
+            <div class="mt-8 border-t border-white/10 pt-6 md:mt-0 md:border-none md:pt-0">
+                <a
+                    href="/s-tecnico"
+                    class="nav-link inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-200 px-4 py-2.5 text-sm font-bold text-[#3b281b] shadow-sm transition-all duration-300 hover:bg-amber-100 hover:shadow md:w-auto md:text-xs"
+                >
+                    <span>Asistencia técnica</span>
+                    <span aria-hidden="true">→</span>
+                </a>
+            </div>
         </nav>
+
     </div>
 </header>
 
@@ -37,9 +79,11 @@ rounded-lg">
 
         function toggleMenu() {
             if (!menuNav || !menuBtn) return;
-            
-            menuNav.classList.toggle('translate-x-full');
-            
+
+            const isClosed = menuNav.classList.contains('translate-x-[115%]');
+            menuNav.classList.toggle('translate-x-[115%]');
+            menuBtn.setAttribute('aria-expanded', String(isClosed));
+
             menuBtn.querySelector('.line-1')?.classList.toggle('rotate-45');
             menuBtn.querySelector('.line-2')?.classList.toggle('opacity-0');
             menuBtn.querySelector('.line-3')?.classList.toggle('-rotate-45');
@@ -48,42 +92,41 @@ rounded-lg">
         if (menuBtn && menuNav) {
             menuBtn.addEventListener('click', toggleMenu);
 
-            navLinks.forEach(link => {
+            navLinks.forEach((link) => {
                 link.addEventListener('click', () => {
-                    if (!menuNav.classList.contains('translate-x-full')) {
+                    if (!menuNav.classList.contains('translate-x-[115%]')) {
                         toggleMenu();
                     }
                 });
             });
         }
 
-        // Lógica del Scroll (Opacidad del fondo + ocultar/mostrar)
+        // Scroll inteligente: compacta fondo y oculta al bajar
         if (header) {
             let lastScrollY = window.scrollY;
 
             window.addEventListener('scroll', () => {
                 const currentScrollY = window.scrollY;
 
-                if (currentScrollY > 50) {
-                    header.classList.replace('bg-[var(--primary-color)]/90', 'bg-[var(--primary-color)]/60');
+                // Añade sombra extra y oscurece ligeramente al hacer scroll
+                if (currentScrollY > 40) {
+                    header.classList.add('shadow-2xl', 'border-amber-200/20');
                 } else {
-                    header.classList.replace('bg-[var(--primary-color)]/60', 'bg-[var(--primary-color)]/90');
+                    header.classList.remove('shadow-2xl', 'border-amber-200/20');
                 }
 
-                const menuAbierto = menuNav && !menuNav.classList.contains('translate-x-full');
+                const menuAbierto = menuNav && !menuNav.classList.contains('translate-x-[115%]');
 
                 if (!menuAbierto) {
-                    if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                        header.classList.add('-translate-y-full');
+                    if (currentScrollY > lastScrollY && currentScrollY > 120) {
+                        header.classList.add('-translate-y-[130%]');
                     } else {
-                        header.classList.remove('-translate-y-full');
+                        header.classList.remove('-translate-y-[130%]');
                     }
                 }
 
                 lastScrollY = currentScrollY;
-            });
+            }, { passive: true });
         }
     });
 </script>
-
-
