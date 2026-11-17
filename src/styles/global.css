@@ -17,6 +17,12 @@ html{
     scroll-behavior: smooth;
 }
 
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+
 h1{
     font-family: "Work Sans", sans-serif !important;
     font-weight: 300 !important;
