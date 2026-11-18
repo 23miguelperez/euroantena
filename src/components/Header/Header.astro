@@ -1,9 +1,9 @@
 ---
 const navItems = [
-    { label: "Inicio", href: "#inicio" },
-    { label: "Servicios", href: "#servicios" },
-    { label: "Nosotros", href: "#proyectos" },
-    { label: "Contacto", href: "#contacto" },
+    { label: "Inicio", href: "/#inicio" },
+    { label: "Servicios", href: "/#servicios" },
+    { label: "Nosotros", href: "/#proyectos" },
+    { label: "Contacto", href: "/#contacto" },
 ];
 ---
 
@@ -14,7 +14,7 @@ const navItems = [
     <div class="flex items-center justify-between">
         
         <!-- Logo tipográfico a juego con el Main -->
-        <a href="#inicio" class="group flex items-center gap-2 text-2xl tracking-tight text-white focus:outline-none">
+        <a href="/#inicio" class="group flex items-center gap-2 text-2xl tracking-tight text-white focus:outline-none">
             <span class="h-2.5 w-2.5 rounded-full bg-amber-200 transition-transform duration-300 group-hover:scale-125"></span>
             <span>
                 <span class="font-light text-amber-100">euro</span><span class="font-bold">antena</span>
@@ -37,8 +37,8 @@ const navItems = [
         <nav
             id="menu-nav"
             class="fixed inset-x-0 top-20 mx-auto w-[94%] rounded-2xl border border-white/15 bg-[#2b1b18]/95 p-8 shadow-2xl backdrop-blur-xl
-                   translate-x-[115%] transition-transform duration-300 ease-in-out
-                   md:static md:mx-0 md:flex md:w-auto md:translate-x-0 md:items-center md:gap-8 md:border-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none"
+                translate-x-[115%] transition-transform duration-300 ease-in-out
+                md:static md:mx-0 md:flex md:w-auto md:translate-x-0 md:items-center md:gap-8 md:border-none md:bg-transparent md:p-0 md:shadow-none md:backdrop-blur-none"
         >
             <ul class="flex flex-col items-start gap-6 md:flex-row md:items-center md:gap-8">
                 {navItems.map((item) => (

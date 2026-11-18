@@ -1,48 +1,5 @@
 ---
-const services = [
-    {
-        title: "Domótica",
-        description: "Ofrecemos servicios de instalación...",
-        icon: "/icons/automatic-gearbox.svg",
-        img: "/images/01_Domotica.png",
-        href: "#"
-    },
-    {
-        title: "Inmótica",
-        description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/wifi.svg",
-        img: "/images/02_Inmotica.png",
-        href: "#"
-    },
-    {
-        title: "Seguridad",
-        description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/home-lock.svg",
-        img: "/images/03_Seguridad.png",
-        href: "#"
-    },
-    {
-        title: "Cableado estructurado",
-        description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/load-balancer.svg",
-        img: "/images/04_Cableado.png",
-        href: "#"
-    },
-    {
-        title: "Ingeniería de telecomunicaciones",
-        description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/building-broadcast-tower.svg",
-        img: "/images/05_Ingeniería.png",
-        href: "#"
-    },
-    {
-        title: "Videovigilancia",
-        description: "Lorem ipsum dolor sit amet...",
-        icon: "/icons/device-cctv.svg",
-        img: "/images/06_Videovigilancia.png",
-        href: "#"
-    }
-];
+import { SERVICES } from "../../data/servicios";
 
 const technicalService = {
     title: "Servicio técnico",
@@ -71,9 +28,9 @@ const technicalService = {
 
         <!-- Cuadrícula de servicios -->
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {services.map((service, index) => (
+            {SERVICES.map((service, index) => (
                 <a
-                    href={service.href ?? "#"}
+                    href={`/servicios/${service.slug}`}
                     class="group relative flex min-h-64 flex-col justify-between overflow-hidden rounded-xl border border-[#6F4E37]/20 p-6 text-white shadow-md transition-all duration-500 hover:-translate-y-1 hover:border-amber-200/60 hover:shadow-2xl focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
                     <!-- Imagen de fondo con zoom -->
@@ -107,7 +64,7 @@ const technicalService = {
                         </div>
 
                         <p class="mt-2 line-clamp-2 text-sm text-white/80">
-                            {service.description}
+                            {service.shortDescription}
                         </p>
 
                         <!-- Línea de acento en tono ámbar -->
@@ -116,6 +73,7 @@ const technicalService = {
                 </a>
             ))}
         </div>
+
 
         <!-- Banner destacado de Servicio Técnico -->
         <div class="mt-10">
