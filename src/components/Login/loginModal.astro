@@ -1,0 +1,182 @@
+<dialog
+    id="login-modal"
+    class="m-auto w-full max-w-sm rounded-lg p-0 shadow-xl backdrop:bg-black/50"
+    >
+    <div class="p-8">
+        <div class="mb-6 flex items-center justify-between">
+        <h2 id="modal-title" class="text-2xl font-bold">Iniciar sesión</h2>
+        <button type="button" id="modal-close" aria-label="Cerrar"
+            class="text-2xl leading-none text-gray-500 hover:text-gray-800">&times;</button>
+    </div>
+
+    <!-- LOGIN -->
+    <form id="login-form" class="space-y-4">
+        <div>
+            <label for="login-email" class="mb-1 block text-sm font-medium">Email</label>
+            <input id="login-email" name="email" type="email" required autocomplete="email"
+            class="w-full rounded border px-3 py-2" />
+        </div>
+        <div>
+            <label for="login-password" class="mb-1 block text-sm font-medium">Contraseña</label>
+            <input id="login-password" name="password" type="password" required autocomplete="current-password"
+            class="w-full rounded border px-3 py-2" />
+        </div>
+        <p id="login-error" class="hidden text-sm text-red-600"></p>
+        <button type="submit"
+            class="w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700 disabled:opacity-50">
+            Entrar
+        </button>
+        <p class="text-center text-sm">
+            ¿No tienes cuenta?
+            <button type="button" data-switch="register" class="text-blue-600 underline">Regístrate</button>
+        </p>
+    </form>
+
+    <!-- REGISTRO -->
+    <form id="register-form" class="hidden space-y-4">
+        <div>
+            <label for="reg-email" class="mb-1 block text-sm font-medium">Email</label>
+            <input id="reg-email" name="email" type="email" required autocomplete="email"
+            class="w-full rounded border px-3 py-2" />
+        </div>
+        <div>
+            <label for="reg-password" class="mb-1 block text-sm font-medium">Contraseña (mínimo 8 caracteres)</label>
+            <input id="reg-password" name="password" type="password" required minlength="8" autocomplete="new-password"
+            class="w-full rounded border px-3 py-2" />
+        </div>
+        <div>
+            <label for="reg-password2" class="mb-1 block text-sm font-medium">Repite la contraseña</label>
+            <input id="reg-password2" name="password2" type="password" required minlength="8" autocomplete="new-password"
+            class="w-full rounded border px-3 py-2" />
+        </div>
+        <p id="register-error" class="hidden text-sm text-red-600"></p>
+        <button type="submit"
+            class="w-full rounded bg-blue-600 py-2 text-white hover:bg-blue-700 disabled:opacity-50">
+            Crear cuenta
+        </button>
+        <p class="text-center text-sm">
+            ¿Ya tienes cuenta?
+            <button type="button" data-switch="login" class="text-blue-600 underline">Inicia sesión</button>
+        </p>
+        </form>
+    </div>
+</dialog>
+
+<script>
+    import { login, register, logout, isLoggedIn } from '../../lib/auth.js';
+
+    const modal = document.getElementById('login-modal') as HTMLDialogElement;
+    const title = document.getElementById('modal-title') as HTMLElement;
+    const loginForm = document.getElementById('login-form') as HTMLFormElement;
+    const registerForm = document.getElementById('register-form') as HTMLFormElement;
+    const loginError = document.getElementById('login-error') as HTMLElement;
+    const registerError = document.getElementById('register-error') as HTMLElement;
+
+    function refreshAuthUI() {
+        const logged = isLoggedIn();
+        document.querySelectorAll('[data-login-open]').forEach((el) =>
+        el.classList.toggle('hidden', logged)
+        );
+        document.querySelectorAll('[data-logout]').forEach((el) =>
+        el.classList.toggle('hidden', !logged)
+        );
+    }
+
+    function showView(view: 'login' | 'register') {
+        const isLogin = view === 'login';
+        loginForm.classList.toggle('hidden', !isLogin);
+        registerForm.classList.toggle('hidden', isLogin);
+        title.textContent = isLogin ? 'Iniciar sesión' : 'Crear cuenta';
+        loginError.classList.add('hidden');
+        registerError.classList.add('hidden');
+    }
+
+    function openModal(view: 'login' | 'register' = 'login') {
+        loginForm.reset();
+        registerForm.reset();
+        showView(view);
+        modal.showModal();
+    }
+
+    function onAuthSuccess() {
+        modal.close();
+        refreshAuthUI();
+        window.dispatchEvent(new Event('auth-changed'));
+    }
+
+    // Abrir: data-login-open (login) o data-register-open (registro)
+    document.querySelectorAll('[data-login-open]').forEach((el) =>
+        el.addEventListener('click', () => openModal('login'))
+    );
+    document.querySelectorAll('[data-register-open]').forEach((el) =>
+        el.addEventListener('click', () => openModal('register'))
+    );
+
+    // Cambiar entre login y registro
+    document.querySelectorAll('[data-switch]').forEach((el) =>
+        el.addEventListener('click', () =>
+        showView((el as HTMLElement).dataset.switch as 'login' | 'register')
+        )
+    );
+
+  // Cerrar: botón X y clic fuera del cuadro
+    document.getElementById('modal-close')!.addEventListener('click', () => modal.close());
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.close();
+    });
+
+    // Cerrar sesión
+    document.querySelectorAll('[data-logout]').forEach((el) =>
+        el.addEventListener('click', () => {
+        logout();
+        refreshAuthUI();
+        window.dispatchEvent(new Event('auth-changed'));
+        })
+    );
+
+    // Enviar login
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginError.classList.add('hidden');
+        const btn = loginForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+        const data = new FormData(loginForm);
+        btn.disabled = true;
+
+    try {
+        await login(String(data.get('email')), String(data.get('password')));
+        onAuthSuccess();
+        } catch (err) {
+        loginError.textContent = (err as Error).message;
+        loginError.classList.remove('hidden');
+        } finally {
+        btn.disabled = false;
+        }
+    });
+
+  // Enviar registro
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        registerError.classList.add('hidden');
+        const btn = registerForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+        const data = new FormData(registerForm);
+
+        if (data.get('password') !== data.get('password2')) {
+        registerError.textContent = 'Las contraseñas no coinciden';
+        registerError.classList.remove('hidden');
+        return;
+        }
+
+    btn.disabled = true;
+    try {
+        await register(String(data.get('email')), String(data.get('password')));
+        onAuthSuccess();
+        } catch (err) {
+        registerError.textContent = (err as Error).message;
+        registerError.classList.remove('hidden');
+        } finally {
+        btn.disabled = false;
+        }
+    });
+
+    refreshAuthUI();
+</script>
