@@ -5,11 +5,11 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
 
 <Layout>
     <main class="min-h-svh bg-[#faf7f5] pb-24 text-[#3E2723]">
-        
+
         <!-- Cabecera oscura a juego con el Hero principal -->
         <div class="bg-[linear-gradient(to_bottom,#2b1b18,#3E2723)] pt-32 pb-28 text-white">
             <div class="mx-auto w-[90%] lg:w-[80%]">
-                
+
                 <a href="/" class="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-amber-200/80 transition-colors hover:text-amber-100">
                     <span class="transition-transform duration-300 group-hover:-translate-x-1" aria-hidden="true">←</span>
                     Volver a inicio
@@ -34,7 +34,7 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
 
                 <!-- 1. Calendario (7 columnas) -->
                 <section class="rounded-2xl border border-[#6F4E37]/20 bg-white p-6 md:p-8 shadow-xl lg:col-span-7" aria-label="Calendario">
-                    
+
                     <div class="mb-6 flex items-center justify-between border-b border-[#6F4E37]/10 pb-4">
                         <div class="flex items-center gap-3">
                             <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6F4E37]/10 font-mono text-xs font-bold text-[#6F4E37]">
@@ -76,7 +76,7 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
 
                 <!-- 2. Horas y Formulario (5 columnas) -->
                 <section class="rounded-2xl border border-[#6F4E37]/20 bg-white p-6 md:p-8 shadow-xl lg:col-span-5" aria-label="Horas disponibles">
-                    
+
                     <div class="flex items-center gap-3">
                         <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6F4E37]/10 font-mono text-xs font-bold text-[#6F4E37]">
                             02
@@ -90,6 +90,21 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
 
                     <div id="slots" class="mt-5 grid grid-cols-3 gap-2.5" aria-live="polite"></div>
 
+                    <p id="slots-message" class="mt-3 hidden text-sm font-medium text-red-600" role="alert"></p>
+
+                    <!-- Aviso si no hay sesión -->
+                    <div id="login-required" class="mt-6 hidden rounded-xl border border-[#6F4E37]/20 bg-[#faf7f5] p-5 text-center">
+                        <p class="text-sm font-semibold text-[#3E2723]">Para reservar tu cita necesitas una cuenta.</p>
+                        <p class="mt-1 text-xs text-neutral-600">Es rápido y así podrás ver y cancelar tus citas.</p>
+                        <button
+                            type="button"
+                            data-login-open
+                            class="mt-4 rounded-xl bg-[#6F4E37] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all duration-300 hover:bg-[#3E2723] cursor-pointer"
+                        >
+                            Iniciar sesión o registrarme
+                        </button>
+                    </div>
+
                     <!-- Formulario -->
                     <form id="booking-form" class="mt-6 hidden space-y-4 border-t border-[#6F4E37]/15 pt-6">
                         <div class="rounded-xl border border-[#6F4E37]/20 bg-[#faf7f5] p-3.5 text-sm">
@@ -99,26 +114,28 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
 
                         <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-700">
                             Nombre
-                            <input name="name" required autocomplete="name" class="mt-1.5 w-full rounded-xl border border-[#6F4E37]/25 bg-[#faf7f5]/50 px-3.5 py-2.5 text-sm focus:border-[#6F4E37] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6F4E37]/20" />
+                            <input name="name" required maxlength="100" autocomplete="name" class="mt-1.5 w-full rounded-xl border border-[#6F4E37]/25 bg-[#faf7f5]/50 px-3.5 py-2.5 text-sm focus:border-[#6F4E37] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6F4E37]/20" />
                         </label>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-700">
                                 Teléfono
-                                <input name="phone" type="tel" required autocomplete="tel" class="mt-1.5 w-full rounded-xl border border-[#6F4E37]/25 bg-[#faf7f5]/50 px-3.5 py-2.5 text-sm focus:border-[#6F4E37] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6F4E37]/20" />
+                                <input name="phone" type="tel" required maxlength="20" autocomplete="tel" class="mt-1.5 w-full rounded-xl border border-[#6F4E37]/25 bg-[#faf7f5]/50 px-3.5 py-2.5 text-sm focus:border-[#6F4E37] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6F4E37]/20" />
                             </label>
                             <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-700">
-                                Email
-                                <input name="email" type="email" required autocomplete="email" class="mt-1.5 w-full rounded-xl border border-[#6F4E37]/25 bg-[#faf7f5]/50 px-3.5 py-2.5 text-sm focus:border-[#6F4E37] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6F4E37]/20" />
+                                Email de tu cuenta
+                                <input id="email-input" name="email" type="email" readonly class="mt-1.5 w-full cursor-not-allowed rounded-xl border border-[#6F4E37]/25 bg-neutral-100 px-3.5 py-2.5 text-sm text-neutral-500 focus:outline-none" />
                             </label>
                         </div>
 
                         <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-700">
                             ¿Qué necesitas?
-                            <textarea name="notes" rows="3" required class="mt-1.5 w-full rounded-xl border border-[#6F4E37]/25 bg-[#faf7f5]/50 px-3.5 py-2.5 text-sm focus:border-[#6F4E37] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6F4E37]/20"></textarea>
+                            <textarea name="notes" rows="3" required maxlength="1000" class="mt-1.5 w-full rounded-xl border border-[#6F4E37]/25 bg-[#faf7f5]/50 px-3.5 py-2.5 text-sm focus:border-[#6F4E37] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#6F4E37]/20"></textarea>
                         </label>
 
-                        <button type="submit" class="w-full rounded-xl bg-[#6F4E37] py-3.5 text-sm font-bold text-white shadow-md transition-all duration-300 hover:bg-[#3E2723] hover:shadow-lg cursor-pointer">
+                        <p id="form-error" class="hidden text-sm font-medium text-red-600" role="alert"></p>
+
+                        <button id="submit-booking" type="submit" class="w-full rounded-xl bg-[#6F4E37] py-3.5 text-sm font-bold text-white shadow-md transition-all duration-300 hover:bg-[#3E2723] hover:shadow-lg disabled:opacity-60 cursor-pointer">
                             Solicitar cita →
                         </button>
                     </form>
@@ -136,6 +153,20 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
                     </div>
 
                 </section>
+
+                <!-- 3. Mis citas (solo con sesión iniciada) -->
+                <section id="my-bookings" class="hidden rounded-2xl border border-[#6F4E37]/20 bg-white p-6 md:p-8 shadow-xl lg:col-span-12" aria-label="Mis citas">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6F4E37]/10 font-mono text-xs font-bold text-[#6F4E37]">
+                            03
+                        </span>
+                        <h3 class="text-lg font-bold text-neutral-900">Mis citas</h3>
+                    </div>
+
+                    <p id="my-bookings-error" class="mt-3 hidden text-sm font-medium text-red-600" role="alert"></p>
+                    <ul id="my-bookings-list" class="mt-5 space-y-3"></ul>
+                </section>
+
             </div>
         </div>
     </main>
@@ -144,88 +175,103 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
 
 
 <script>
-    // ---------- Datos y disponibilidad (SIMULADOS) ----------
-    // Cuando exista el back, solo hay que sustituir getAvailability()
-    // por una llamada fetch a tu API y guardar la reserva en el submit.
-    const SLOT_HOURS = ["09:00", "10:00", "11:00", "12:00", "13:00", "16:00", "17:00", "18:00"];
-    const booked = new Set<string>(); // reservas hechas en esta sesión
+    import { isLoggedIn, publicFetch, authFetch } from "../lib/auth.js";
 
-    function hash(str: string): number {
-        let h = 0;
-        for (const c of str) h = (h * 31 + c.charCodeAt(0)) | 0;
-        return Math.abs(h);
-    }
+    // ---------- Tipos y estado ----------
+    type Slot = { hora: string; libre: boolean };
+    type Cita = { id: number; inicio: string; fin: string; notas: string | null };
 
-    function toISO(d: Date): string {
-        const m = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        return `${d.getFullYear()}-${m}-${day}`;
-    }
-
-    function startOfDay(d: Date): Date {
-        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    }
-
-    function getAvailability(techId: string, date: Date): string[] {
-        const now = new Date();
-        if (startOfDay(date) < startOfDay(now)) return [];
-        const dow = date.getDay();
-        if (dow === 0 || dow === 6) return [];
-
-        const iso = toISO(date);
-        const isToday = iso === toISO(now);
-
-        return SLOT_HOURS.filter((slot) => {
-            if (hash(techId + iso + slot) % 3 === 0) return false; // "ocupado" simulado
-            if (booked.has(`${techId}|${iso}|${slot}`)) return false;
-            if (isToday && parseInt(slot) <= now.getHours()) return false;
-            return true;
-        });
-    }
-
-    // ---------- Estado ----------
     const today = new Date();
     const state = {
-        techId: "t1",
-        techName: "Técnico 1",
         month: new Date(today.getFullYear(), today.getMonth(), 1),
         date: null as Date | null,
         slot: null as string | null
     };
+
+    let monthData: Record<string, number> = {}; // "2026-11-23" -> horas libres
+    let currentSlots: Slot[] = [];
+    let accountEmail = "";
+    let monthReq = 0; // evita que una respuesta lenta pise a otra más reciente
+    let slotsReq = 0;
 
     // ---------- Elementos ----------
     const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
     const grid = $("calendar-grid");
     const monthLabel = $("month-label");
     const prevBtn = $<HTMLButtonElement>("prev-month");
-    const nextBtn = $("next-month");
+    const nextBtn = $<HTMLButtonElement>("next-month");
     const slotsEl = $("slots");
+    const slotsMessage = $("slots-message");
     const selectedDay = $("selected-day");
+    const loginBox = $("login-required");
     const form = $<HTMLFormElement>("booking-form");
     const summary = $("summary");
+    const emailInput = $<HTMLInputElement>("email-input");
+    const formError = $("form-error");
+    const submitBtn = $<HTMLButtonElement>("submit-booking");
     const confirmation = $("confirmation");
     const confirmationText = $("confirmation-text");
+    const myBookings = $("my-bookings");
+    const myBookingsList = $("my-bookings-list");
+    const myBookingsError = $("my-bookings-error");
 
     const fmtMonth = new Intl.DateTimeFormat("es-ES", { month: "long", year: "numeric" });
     const fmtDay = new Intl.DateTimeFormat("es-ES", { weekday: "long", day: "numeric", month: "long" });
 
-    // ---------- Render ----------
-    function renderCalendar() {
+    // ---------- Utilidades ----------
+    function toISO(d: Date): string {
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${d.getFullYear()}-${m}-${day}`;
+    }
+
+    function monthKey(d: Date): string {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function showMessage(el: HTMLElement, text: string) {
+        el.textContent = text;
+        el.classList.remove("hidden");
+    }
+
+    // ---------- Calendario ----------
+    function updateMonthHeader() {
         monthLabel.textContent = fmtMonth.format(state.month);
         prevBtn.disabled =
             state.month.getFullYear() === today.getFullYear() && state.month.getMonth() <= today.getMonth();
+    }
 
+    async function refreshMonth() {
+        const req = ++monthReq;
+        updateMonthHeader();
+        grid.innerHTML = '<p class="col-span-7 py-8 text-center text-sm text-neutral-500">Cargando...</p>';
+
+        try {
+            const res = await publicFetch(`/api/citas/disponibilidad-mes?mes=${monthKey(state.month)}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            if (req !== monthReq) return;
+            monthData = data.dias;
+            renderCalendar();
+        } catch {
+            if (req !== monthReq) return;
+            grid.innerHTML =
+                '<p class="col-span-7 py-8 text-center text-sm text-red-600">No se pudo cargar el calendario. Inténtalo más tarde.</p>';
+        }
+    }
+
+    function renderCalendar() {
         const year = state.month.getFullYear();
         const month = state.month.getMonth();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const offset = (new Date(year, month, 1).getDay() + 6) % 7; // semana empieza en lunes
+        const offset = (new Date(year, month, 1).getDay() + 6) % 7; // la semana empieza en lunes
 
         grid.innerHTML = "";
         for (let i = 0; i < offset; i++) grid.appendChild(document.createElement("span"));
 
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
-            const free = getAvailability(state.techId, date).length;
+            const free = monthData[toISO(date)] ?? 0;
             const isSelected = state.date !== null && toISO(state.date) === toISO(date);
             const isToday = toISO(date) === toISO(today);
 
@@ -238,8 +284,8 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
                 (free === 0
                     ? "cursor-not-allowed text-slate-300 "
                     : isSelected
-                    ? "bg-[#6F4E37] text-white "
-                    : "hover:bg-[#6F4E37]/10 ") +
+                    ? "bg-[#6F4E37] text-white cursor-pointer "
+                    : "hover:bg-[#6F4E37]/10 cursor-pointer ") +
                 (isToday ? "ring-1 ring-[#6F4E37] " : "");
             btn.innerHTML =
                 `<span class="font-semibold">${day}</span>` +
@@ -248,17 +294,19 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
             btn.addEventListener("click", () => {
                 state.date = date;
                 state.slot = null;
+                confirmation.classList.add("hidden");
                 renderCalendar();
-                renderSlots();
+                loadSlots();
             });
             grid.appendChild(btn);
         }
     }
 
-    function renderSlots() {
+    // ---------- Horas ----------
+    async function loadSlots() {
         slotsEl.innerHTML = "";
-        form.classList.add("hidden");
-        confirmation.classList.add("hidden");
+        slotsMessage.classList.add("hidden");
+        updateBookingPanel();
 
         if (!state.date) {
             selectedDay.textContent = "Selecciona un día en el calendario.";
@@ -266,77 +314,147 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
         }
         selectedDay.textContent = fmtDay.format(state.date);
 
-        const slots = getAvailability(state.techId, state.date);
-        slots.forEach((slot) => {
+        const req = ++slotsReq;
+        slotsEl.innerHTML = '<p class="col-span-3 text-sm text-neutral-500">Cargando horas...</p>';
+
+        try {
+            const res = await publicFetch(`/api/citas/disponibilidad?fecha=${toISO(state.date)}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            if (req !== slotsReq) return;
+            currentSlots = data.slots;
+            renderSlots();
+        } catch {
+            if (req !== slotsReq) return;
+            slotsEl.innerHTML = '<p class="col-span-3 text-sm text-red-600">No se pudieron cargar las horas.</p>';
+        }
+    }
+
+    function renderSlots() {
+        slotsEl.innerHTML = "";
+
+        if (currentSlots.length === 0) {
+            slotsEl.innerHTML = '<p class="col-span-3 text-sm text-neutral-500">No hay horas disponibles este día.</p>';
+            return;
+        }
+
+        currentSlots.forEach(({ hora, libre }) => {
+            const selected = state.slot === hora;
             const btn = document.createElement("button");
             btn.type = "button";
-            btn.textContent = slot;
-            btn.setAttribute("aria-pressed", String(state.slot === slot));
+            btn.textContent = hora;
+            btn.disabled = !libre;
+            btn.setAttribute("aria-pressed", String(selected));
             btn.className =
-                "rounded border border-[#6F4E37] px-3 py-2 text-sm transition-colors " +
-                (state.slot === slot ? "bg-[#6F4E37] text-white" : "hover:bg-[#6F4E37] hover:text-white");
+                "rounded border px-3 py-2 text-sm transition-colors " +
+                (!libre
+                    ? "cursor-not-allowed border-slate-200 text-slate-300 line-through"
+                    : selected
+                    ? "border-[#6F4E37] bg-[#6F4E37] text-white cursor-pointer"
+                    : "border-[#6F4E37] hover:bg-[#6F4E37] hover:text-white cursor-pointer");
             btn.addEventListener("click", () => {
-                state.slot = slot;
+                state.slot = hora;
                 renderSlots();
-                showForm();
+                updateBookingPanel();
             });
             slotsEl.appendChild(btn);
         });
-
-        if (state.slot) showForm();
     }
 
-    function showForm() {
-        if (!state.date || !state.slot) return;
-        summary.textContent = `${state.techName} · ${fmtDay.format(state.date)} · ${state.slot}`;
-        form.classList.remove("hidden");
+    // ---------- Panel de reserva: formulario o aviso de login ----------
+    function updateBookingPanel() {
+        if (!state.date || !state.slot) {
+            form.classList.add("hidden");
+            loginBox.classList.add("hidden");
+            return;
+        }
+
+        if (isLoggedIn()) {
+            summary.textContent = `${fmtDay.format(state.date)} · ${state.slot}`;
+            form.classList.remove("hidden");
+            loginBox.classList.add("hidden");
+        } else {
+            form.classList.add("hidden");
+            loginBox.classList.remove("hidden");
+        }
     }
 
-    // ---------- Eventos ----------
-    document.querySelectorAll<HTMLButtonElement>(".tech-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-            state.techId = btn.dataset.tech!;
-            state.techName = btn.dataset.name!;
-            state.slot = null;
-            document.querySelectorAll(".tech-btn").forEach((b) => {
-                const active = b === btn;
-                b.setAttribute("aria-pressed", String(active));
-                b.classList.toggle("bg-[#6F4E37]/10", active);
-            });
-            renderCalendar();
-            renderSlots();
-        });
-    });
-    document.querySelector(".tech-btn")?.classList.add("bg-[#6F4E37]/10");
+    async function loadAccountEmail() {
+        if (!isLoggedIn()) {
+            accountEmail = "";
+            emailInput.defaultValue = "";
+            emailInput.value = "";
+            return;
+        }
+        try {
+            const res = await authFetch("/api/me");
+            if (!res.ok) return;
+            const me = await res.json();
+            accountEmail = me.email;
+            emailInput.defaultValue = me.email; // así form.reset() no lo borra
+            emailInput.value = me.email;
+        } catch {
+            /* el email es solo informativo */
+        }
+    }
 
-    prevBtn.addEventListener("click", () => {
-        state.month = new Date(state.month.getFullYear(), state.month.getMonth() - 1, 1);
-        renderCalendar();
-    });
-    nextBtn.addEventListener("click", () => {
-        state.month = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 1);
-        renderCalendar();
-    });
-
-    form.addEventListener("submit", (e) => {
+    // ---------- Reservar ----------
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (!state.date || !state.slot) return;
 
-        const data = Object.fromEntries(new FormData(form));
-        const request = { technician: state.techId, date: toISO(state.date), slot: state.slot, ...data };
-        console.log("Solicitud de cita (pendiente de back):", request);
+        formError.classList.add("hidden");
+        const data = new FormData(form);
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Enviando...";
 
-        booked.add(`${state.techId}|${toISO(state.date)}|${state.slot}`);
-        confirmationText.textContent = `${summary.textContent}. Te contactaremos en ${data.email}.`;
+        try {
+            const res = await authFetch("/api/citas", {
+                method: "POST",
+                body: JSON.stringify({
+                    inicio: `${toISO(state.date)}T${state.slot}`,
+                    nombre: String(data.get("name") ?? ""),
+                    telefono: String(data.get("phone") ?? ""),
+                    notas: String(data.get("notes") ?? "")
+                })
+            });
 
-        form.reset();
-        form.classList.add("hidden");
-        slotsEl.innerHTML = "";
-        selectedDay.textContent = "";
-        confirmation.classList.remove("hidden");
-        state.slot = null;
-        state.date = null;
-        renderCalendar();
+            // Sesión caducada: authFetch ya cierra la sesión y la página muestra el aviso de login
+            if (res.status === 401) return;
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                const message = err.error ?? "No se pudo reservar la cita";
+
+                if (res.status === 409) {
+                    // El hueco ya no está libre: recargamos y avisamos
+                    state.slot = null;
+                    await Promise.all([refreshMonth(), loadSlots()]);
+                    showMessage(slotsMessage, message);
+                    return;
+                }
+                throw new Error(message);
+            }
+
+            const when = `${fmtDay.format(state.date)} · ${state.slot}`;
+            confirmationText.textContent = `${when}. Te contactaremos en ${accountEmail || "tu email"}.`;
+
+            form.reset();
+            state.date = null;
+            state.slot = null;
+            slotsEl.innerHTML = "";
+            selectedDay.textContent = "";
+            updateBookingPanel();
+            confirmation.classList.remove("hidden");
+
+            refreshMonth();
+            loadMyBookings();
+        } catch (err) {
+            showMessage(formError, (err as Error).message);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Solicitar cita →";
+        }
     });
 
     $("new-booking").addEventListener("click", () => {
@@ -344,7 +462,114 @@ import Contactos from "../components/Sections/Contacto/Contacto.astro";
         selectedDay.textContent = "Selecciona un día en el calendario.";
     });
 
+    // ---------- Mis citas ----------
+    async function loadMyBookings() {
+        myBookingsError.classList.add("hidden");
+
+        if (!isLoggedIn()) {
+            myBookings.classList.add("hidden");
+            return;
+        }
+
+        try {
+            const res = await authFetch("/api/citas/mias");
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error();
+            renderMyBookings(await res.json());
+        } catch {
+            myBookings.classList.remove("hidden");
+            showMessage(myBookingsError, "No se pudieron cargar tus citas.");
+        }
+    }
+
+    function renderMyBookings(citas: Cita[]) {
+        const now = new Date();
+        const nowStr = `${toISO(now)}T${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+        const upcoming = citas.filter((c) => c.inicio > nowStr);
+
+        myBookings.classList.remove("hidden");
+        myBookingsList.innerHTML = "";
+
+        if (upcoming.length === 0) {
+            myBookingsList.innerHTML = '<li class="text-sm text-neutral-500">No tienes citas próximas.</li>';
+            return;
+        }
+
+        upcoming.forEach((c) => {
+            const [fecha, hora] = c.inicio.split("T");
+            const [y, m, d] = fecha.split("-").map(Number);
+
+            const li = document.createElement("li");
+            li.className =
+                "flex items-center justify-between gap-4 rounded-xl border border-[#6F4E37]/20 bg-[#faf7f5] p-4";
+
+            const info = document.createElement("div");
+            const title = document.createElement("p");
+            title.className = "font-semibold capitalize text-[#3E2723]";
+            title.textContent = `${fmtDay.format(new Date(y, m - 1, d))} · ${hora}`;
+            info.appendChild(title);
+
+            if (c.notas) {
+                const notes = document.createElement("p");
+                notes.className = "mt-0.5 text-sm text-neutral-600";
+                notes.textContent = c.notas;
+                info.appendChild(notes);
+            }
+
+            const cancel = document.createElement("button");
+            cancel.type = "button";
+            cancel.textContent = "Cancelar";
+            cancel.className =
+                "shrink-0 rounded-lg border border-red-300 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-red-700 transition-colors hover:bg-red-50 disabled:opacity-60 cursor-pointer";
+            cancel.addEventListener("click", () => cancelBooking(c.id, cancel));
+
+            li.append(info, cancel);
+            myBookingsList.appendChild(li);
+        });
+    }
+
+    async function cancelBooking(id: number, btn: HTMLButtonElement) {
+        if (!confirm("¿Seguro que quieres cancelar esta cita?")) return;
+
+        myBookingsError.classList.add("hidden");
+        btn.disabled = true;
+
+        try {
+            const res = await authFetch(`/api/citas/${id}`, { method: "DELETE" });
+            if (res.status === 401) return;
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.error ?? "No se pudo cancelar la cita");
+            }
+
+            await Promise.all([loadMyBookings(), refreshMonth()]);
+            if (state.date) loadSlots();
+        } catch (err) {
+            btn.disabled = false;
+            showMessage(myBookingsError, (err as Error).message);
+        }
+    }
+
+    // ---------- Eventos ----------
+    prevBtn.addEventListener("click", () => {
+        state.month = new Date(state.month.getFullYear(), state.month.getMonth() - 1, 1);
+        refreshMonth();
+    });
+    nextBtn.addEventListener("click", () => {
+        state.month = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 1);
+        refreshMonth();
+    });
+
+    // Login, registro o cierre de sesión (lo lanza el popup)
+    window.addEventListener("auth-changed", () => {
+        updateBookingPanel();
+        loadAccountEmail();
+        loadMyBookings();
+    });
+
     // ---------- Inicio ----------
-    renderCalendar();
-    renderSlots();
+    refreshMonth();
+    loadSlots();
+    loadAccountEmail();
+    loadMyBookings();
 </script>

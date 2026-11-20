@@ -21,10 +21,10 @@ export async function login(email, password) {
 
     if (!res.ok) {
         throw new Error(
-        res.status === 401
+            res.status === 401
             ? 'Email o contraseña incorrectos'
             : 'No se pudo iniciar sesión'
-        );
+    );
     }
 
     const data = await res.json();
@@ -37,14 +37,14 @@ export async function register(email, password) {
         password,
     });
 
-if (!res.ok) {
-    let message = 'No se pudo crear la cuenta';
+    if (!res.ok) {
+        let message = 'No se pudo crear la cuenta';
     try {
         const data = await res.json();
         if (data.error) message = data.error;
     } catch {}
-    throw new Error(message);
-}
+        throw new Error(message);
+    }
 
   // Tras registrarse, inicia sesión automáticamente
     await login(email, password);
@@ -68,4 +68,38 @@ export function isLoggedIn() {
     } catch {
         return false;
     }
+}
+
+// Para endpoints públicos: NO envía el token.
+// (Un token caducado en un endpoint público provocaría un 401 innecesario.)
+export async function publicFetch(path, options = {}) {
+    try {
+        return await fetch(`${API}${path}`, options);
+    } catch {
+        throw new Error('No se pudo conectar con el servidor');
+    }
+}
+
+// Para endpoints que requieren sesión. Si el token ha caducado, cierra la sesión.
+export async function authFetch(path, options = {}) {
+    const token = getToken();
+    let res;
+    try {
+        res = await fetch(`${API}${path}`, {
+        ...options,
+        headers: {
+            ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...(options.headers || {}),
+        },
+        });
+    } catch {
+        throw new Error('No se pudo conectar con el servidor');
+    }
+
+    if (res.status === 401) {
+        logout();
+        window.dispatchEvent(new Event('auth-changed'));
+    }
+    return res;
 }
