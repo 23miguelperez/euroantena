@@ -6,15 +6,19 @@ const CAMPOS = [
         type: "text",
         placeholder: "Lucía Fernández Ortega",
         required: true,
-        half: true
+        half: true,
+        autocomplete: "name",
+        maxlength: 100
     },
     {
-        id: "company",
-        label: "Empresa (opcional)",
-        type: "text",
-        placeholder: "Soluciones Atlántica S.L.",
+        id: "phone",
+        label: "Teléfono (opcional)",
+        type: "tel",
+        placeholder: "600 123 456",
         required: false,
-        half: true
+        half: true,
+        autocomplete: "tel",
+        maxlength: 20
     },
     {
         id: "email",
@@ -22,7 +26,9 @@ const CAMPOS = [
         type: "email",
         placeholder: "lucia.fernandez@ejemplo.com",
         required: true,
-        half: false
+        half: false,
+        autocomplete: "email",
+        maxlength: 180
     },
     {
         id: "message",
@@ -30,14 +36,16 @@ const CAMPOS = [
         type: "textarea",
         placeholder: "Cuéntanos en qué proyecto o instalación podemos ayudarte...",
         required: true,
-        half: false
+        half: false,
+        autocomplete: "off",
+        maxlength: 2000
     }
 ] as const;
 ---
 
-<form class="w-full">
+<form class="w-full" data-contact-form>
     <div class="rounded-2xl border border-white/15 bg-white/5 p-6 sm:p-8 shadow-xl backdrop-blur-sm">
-        
+
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {CAMPOS.map((campo) => (
                 <div class={campo.half ? "sm:col-span-1" : "sm:col-span-2"}>
@@ -54,6 +62,8 @@ const CAMPOS = [
                             name={campo.id}
                             rows="4"
                             required={campo.required}
+                            minlength="10"
+                            maxlength={campo.maxlength}
                             placeholder={campo.placeholder}
                             class="w-full resize-none rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 transition-all duration-300 focus:border-amber-200 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-200/25"
                         ></textarea>
@@ -63,6 +73,8 @@ const CAMPOS = [
                             id={campo.id}
                             name={campo.id}
                             required={campo.required}
+                            maxlength={campo.maxlength}
+                            autocomplete={campo.autocomplete}
                             placeholder={campo.placeholder}
                             class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/35 transition-all duration-300 focus:border-amber-200 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-200/25"
                         />
@@ -71,15 +83,75 @@ const CAMPOS = [
             ))}
         </div>
 
+        <!-- Campo trampa para bots: las personas no lo ven ni lo rellenan -->
+        <div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+            <label>
+                No rellenar este campo
+                <input type="text" name="website" tabindex="-1" autocomplete="off" />
+            </label>
+        </div>
+
         <div class="mt-6 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center">
             <button
                 type="submit"
-                class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-200 px-6 py-3 text-sm font-bold text-[#3b281b] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-100 sm:w-auto cursor-pointer"
+                class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-200 px-6 py-3 text-sm font-bold text-[#3b281b] shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto cursor-pointer"
             >
                 <span>Enviar mensaje</span>
                 <span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">→</span>
             </button>
+
+            <p data-status class="hidden text-sm font-medium" role="status" aria-live="polite"></p>
         </div>
 
     </div>
 </form>
+
+<script>
+    import { publicFetch } from "../../../lib/auth.js";
+
+    document.querySelectorAll<HTMLFormElement>("form[data-contact-form]").forEach((form) => {
+        const status = form.querySelector<HTMLElement>("[data-status]")!;
+        const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+        const buttonLabel = button.querySelector("span")!;
+
+        function showStatus(text: string, ok: boolean) {
+            status.textContent = text;
+            status.classList.remove("hidden", "text-amber-200", "text-red-300");
+            status.classList.add(ok ? "text-amber-200" : "text-red-300");
+        }
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            status.classList.add("hidden");
+
+            const data = new FormData(form);
+            button.disabled = true;
+            buttonLabel.textContent = "Enviando...";
+
+            try {
+                const res = await publicFetch("/api/contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        nombre: String(data.get("name") ?? ""),
+                        telefono: String(data.get("phone") ?? ""),
+                        email: String(data.get("email") ?? ""),
+                        mensaje: String(data.get("message") ?? ""),
+                        website: String(data.get("website") ?? "")
+                    })
+                });
+
+                const body = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(body.error ?? "No se pudo enviar el mensaje.");
+
+                form.reset();
+                showStatus("¡Mensaje enviado! Te responderemos lo antes posible.", true);
+            } catch (err) {
+                showStatus((err as Error).message, false);
+            } finally {
+                button.disabled = false;
+                buttonLabel.textContent = "Enviar mensaje";
+            }
+        });
+    });
+</script>
